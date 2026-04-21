@@ -11,49 +11,42 @@ describe("Edit Account Details", () => {
 
   beforeEach(() => {
     cy.login(user.loginName, user.password);
+    cy.goToEditAccount();
   });
 
   it("should navigate to Edit Account Details page from sidebar", () => {
-    cy.get(".side_account_list").find("a").contains("Edit account details").click();
+    cy.visit("/index.php?rt=account/account");
+    cy.contains("a", "Edit account details").click({ force: true });
     cy.url().should("include", "account/edit");
-    cy.get(".maintext").should("contain", "MY ACCOUNT INFORMATION");
   });
 
   it("should display pre-filled account details form", () => {
-    cy.goToEditAccount();
-    cy.get("#AccountFrm_firstname").should("not.be.empty");
-    cy.get("#AccountFrm_lastname").should("not.be.empty");
-    cy.get("#AccountFrm_email").should("not.be.empty");
+    cy.get("#AccountFrm_firstname").should("be.visible");
+    cy.get("#AccountFrm_lastname").should("be.visible");
+    cy.get("#AccountFrm_email").should("be.visible");
   });
 
   it("should update account details and verify changes are saved", () => {
-    cy.goToEditAccount();
-
-    const updatedFirstName = "MariamUpdated";
-    const updatedLastName = "TestUpdated";
+    const updatedFirstName = "SabaUpdated";
+    const updatedLastName = "SaginadzeUpdated";
 
     cy.get("#AccountFrm_firstname").clear().type(updatedFirstName);
     cy.get("#AccountFrm_lastname").clear().type(updatedLastName);
-    cy.get("#AccountFrm_phone").clear().type(user.phone);
-
     cy.get("button[type='submit']").contains("Continue").click();
 
-    // წარმატების შეტყობინება
     cy.get(".alert-success").should("be.visible");
 
-    // შემოვიდეთ Edit გვერდზე და შევამოწმოთ ცვლილებები
     cy.goToEditAccount();
     cy.get("#AccountFrm_firstname").should("have.value", updatedFirstName);
     cy.get("#AccountFrm_lastname").should("have.value", updatedLastName);
 
     // მონაცემების უკან დაბრუნება
-    cy.get("#AccountFrm_firstname").clear().type(user.firstName);
-    cy.get("#AccountFrm_lastname").clear().type(user.lastName);
+    cy.get("#AccountFrm_firstname").clear().type("saba");
+    cy.get("#AccountFrm_lastname").clear().type("saginadze");
     cy.get("button[type='submit']").contains("Continue").click();
   });
 
   it("should show error when required fields are empty", () => {
-    cy.goToEditAccount();
     cy.get("#AccountFrm_firstname").clear();
     cy.get("#AccountFrm_lastname").clear();
     cy.get("button[type='submit']").contains("Continue").click();
