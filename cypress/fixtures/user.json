@@ -1,0 +1,9 @@
+{
+  "loginName": "sabuka_test",
+  "email": "sabuka.test@example.com",
+  "password": "Test@1234",
+  "newPassword": "NewTest@5678",
+  "firstName": "sabuka",
+  "lastName": "Testeli",
+  "phone": "555123456"
+}
